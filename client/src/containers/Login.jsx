@@ -9,6 +9,7 @@ import { FaUserAlt, FaEnvelope, FaLock, FcGoogle } from '../assets/icons'
 import { buttonClick } from '../animations'
 import { validateUserJWTToken } from '../api'
 import { setUserDetails } from '../context/actions/userActions'
+import { alertInfo, alertWarning, alertNULL } from '../context/actions/alertActions'
 
 import { 
     getAuth,
@@ -34,6 +35,7 @@ const Login = () => {
     const dispatch = useDispatch()
 
     const user = useSelector(state => state.user)
+    const alert = useSelector(state => state.alert)
 
     useEffect(() => {
         if(user){
@@ -60,10 +62,10 @@ const Login = () => {
     // Sign up with email && password
     const signUpWithEmailPass = async() => {
         if((userName && userEmail && password && confirmPassword) === ''){
-            alert('Allfield must not be empty')
+            dispatch(alertInfo("Required fields should not be empty"))
         }else{
             if(password !== confirmPassword){
-                alert("Password Doesn't Match")
+                dispatch(alertWarning("Password doesn't match"))
             }else{
                 await createUserWithEmailAndPassword(auth, userEmail, password).then(userCred => {
                     setUserName('')
@@ -88,7 +90,7 @@ const Login = () => {
     // Sign in with email and password
     const signInWithEmailPass = async() => {
         if((userEmail && password) === ''){
-            alert('Fields must not be empty')
+            dispatch(alertInfo("Required fields should not be empty"))
         }else{
             await signInWithEmailAndPassword(auth, userEmail, password).then(userCred => {
                 auth.onAuthStateChanged(cred => {

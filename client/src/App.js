@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 
 import { Main, Login } from './containers'
 import { validateUserJWTToken } from './api';
 import { setUserDetails } from './context/actions/userActions'
-import { MainLoader } from './components';
+import { MainLoader, Alert } from './components';
+import { alertNULL } from './context/actions/alertActions'
 
 import { getAuth } from 'firebase/auth'
 import { app } from './config/firebase.config'
@@ -17,6 +18,7 @@ function App() {
     const [isLoading, setIsLoading] = useState(false)
     const auth = getAuth(app)
     const dispatch = useDispatch()
+    const alert = useSelector(state => state.alert)
 
     useEffect(() => {
         setIsLoading(true)
@@ -48,6 +50,13 @@ function App() {
                 <Route path='/*' element={<Main />}/>
                 <Route path='/login' element={<Login />}/>
             </Routes>
+
+            {alert?.type &&
+                <Alert 
+                    type={alert?.type}
+                    message={alert?.message}
+                />
+            }
         </div>
     );
 }
