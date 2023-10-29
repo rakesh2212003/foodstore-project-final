@@ -38,6 +38,9 @@ import {
     HiCurrencyRupee
 } from "react-icons/hi2";
 
+import {
+    AiOutlineArrowLeft,
+} from "react-icons/ai"
 
 export{
     FaEnvelope,
@@ -59,4 +62,5 @@ export{
     FcGoogle,
     FcClearFilters,
     FaUserAlt,
+    AiOutlineArrowLeft,
 };

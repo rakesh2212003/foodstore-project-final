@@ -30,58 +30,62 @@ const Header = () => {
     };
 
     return (
-        <header className='fixed backdrop-blur-md z-50 inset-x-0 top-0 flex items-center justify-between px-8 py-4'>
+        <header className='fixed backdrop-blur-md z-50 inset-x-0 top-0 flex items-center justify-between px-6 py-4'>
+            {/* Shop Logo */}
             <NavLink
-                className='flex items-center justify-center gap-4'
                 to={'/'}
+                className='flex items-center justify-center gap-4'
             >
                 <img
-                    className='w-12'
                     src={Logo}
                     alt="logo"
+                    className='w-12'
                 />
                 <p className='font-semibold text-xl'>RFC</p>
             </NavLink>
 
+            {/* Navbar section */}
             <nav className='flex items-center justify-center gap-8'>
+                {/* Nav items */}
                 <ul className='hidden md:flex items-center justify-center gap-16'>
                     <NavLink
+                        to={'/'}
                         className={({ isActive }) =>
                             isActive ? isActiveStyles : isNotActiveStyles
                         }
-                        to={'/'}
                     >
                         Home
                     </NavLink>
 
                     <NavLink
+                        to={'/menu'}
                         className={({ isActive }) =>
                             isActive ? isActiveStyles : isNotActiveStyles
                         }
-                        to={'/menu'}
                     >
                         Menu
                     </NavLink>
 
                     <NavLink
+                        to={'/services'}
                         className={({ isActive }) =>
                             isActive ? isActiveStyles : isNotActiveStyles
                         }
-                        to={'/services'}
                     >
                         Services
                     </NavLink>
 
                     <NavLink
+                        to={'/aboutus'}
                         className={({ isActive }) =>
                             isActive ? isActiveStyles : isNotActiveStyles
                         }
-                        to={'/aboutus'}
                     >
                         About Us
                     </NavLink>
                 </ul>
-
+                
+                {/* Add to Cart */}
                 <motion.div
                     className='relative cursor-pointer'
                     {...buttonClick}
@@ -92,20 +96,24 @@ const Header = () => {
                     </div>
                 </motion.div>
 
+                {/* Avatar/Menu Section */}
                 {user ? (
                     <>
                         <div 
+                            onMouseEnter={() => setIsMenu(true)}
                             className='relative cursor-pointer'
-                            onMouseEnter={() => setIsMenu(true)}>
+                        >
+                            {/* Avatar */}
                             <div className='w-12 h-12 rounded-full shadow-md cursor-pointer overflow-hidden flex items-center justify-center'>
                                 <motion.img
                                     src={user?.picture ? user?.picture : Avatar}
-                                    className='w-full h-full object-cover'
                                     whileHover={{ scale: 1.15 }}
                                     referrerPolicy='no-referrer'
+                                    className='w-full h-full object-cover'
                                 />
                             </div>
 
+                            {/* Header Menu Section */}
                             {isMenu && (
                                 <motion.div
                                     className='px-6 py-4 w-48 bg-lightOverlay backdrop-blur-md rounded-md shadow-md absolute top-12 right-0 flex flex-col gap-4'
@@ -113,30 +121,31 @@ const Header = () => {
                                     {...slideTop}
                                 >
                                     <Link
-                                        className=" hover:text-red-500 text-xl text-textColor"
                                         to={"/dashboard/home"}
+                                        className=" hover:text-red-500 text-xl text-textColor"
                                     >
                                         Dashboard
                                     </Link>
 
                                     <Link
-                                        className=" hover:text-red-500 text-xl text-textColor"
                                         to={"/profile"}
+                                        className=" hover:text-red-500 text-xl text-textColor"
                                     >
                                         My Profile
                                     </Link>
                                     <Link
-                                        className=" hover:text-red-500 text-xl text-textColor"
                                         to={"/user-orders"}
+                                        className=" hover:text-red-500 text-xl text-textColor"
                                     >
                                         Orders
                                     </Link>
                                     <hr />
 
+                                    {/* Sign-out Button */}
                                     <motion.div
                                         {...buttonClick}
-                                        className='group flex items-center justify-center px-3 py-2 rounded-md shadow-md bg-gray-100 hover:bg-gray-200 gap-3'
                                         onClick={signOut}
+                                        className='group flex items-center justify-center px-3 py-2 rounded-md shadow-md bg-gray-100 hover:bg-gray-200 gap-3'
                                     >
                                         <MdLogout className='text-2xl text-textColor group-hover:text-headingColor' />
                                         <p className='text-textColor text-xl group-hover:text-headingColor'>Sign out</p>
@@ -147,13 +156,13 @@ const Header = () => {
                     </>
                 ) : (
                     <>
+                        {/* Header Login button */}
                         <NavLink
-                            className=''
                             to={'/login'}
                         >
                             <motion.button
-                                className='px-4 py-2 rounded-md shadow-md bg-lightOverlay border border-red-300 cursor-pointer'
                                 {...buttonClick}
+                                className='px-4 py-2 rounded-md shadow-md bg-lightOverlay border border-red-300 cursor-pointer'
                             >
                                 Login
                             </motion.button>

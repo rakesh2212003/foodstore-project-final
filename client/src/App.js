@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 
-import { Main, Login } from './containers'
+import { Main, Login, Dashboard } from './containers'
 import { validateUserJWTToken } from './api';
 import { setUserDetails } from './context/actions/userActions'
 import { MainLoader, Alert } from './components';
@@ -49,6 +49,7 @@ function App() {
             <Routes>
                 <Route path='/*' element={<Main />}/>
                 <Route path='/login' element={<Login />}/>
+                <Route path='/dashboard/*' element={<Dashboard />}/>
             </Routes>
 
             {alert?.type &&
