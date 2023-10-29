@@ -59,9 +59,9 @@ const DBLeftSection = () => {
                             ? `${isActiveStyles} px-4 py-2 border-l-8 border-red-500`
                             : isNotActiveStyles
                     }
-                    to={'/dashboard/newItems'}
+                    to={'/dashboard/newItem'}
                 >
-                    Add New Items
+                    Add New Item
                 </NavLink>
                 <NavLink
                     className={({ isActive }) => 
