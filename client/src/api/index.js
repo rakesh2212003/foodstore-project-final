@@ -21,3 +21,21 @@ export const addNewProduct = async(data) => {
         return null
     }
 }
+
+export const getAllProducts = async(data) => {
+    try{
+        const res = await axios.get(`${baseURL}/api/products/all`, {...data})
+        return res.data.data
+    }catch(err){
+        return null
+    }
+}
+
+export const deleteAProduct = async(productId) => {
+    try{
+        const res = await axios.delete(`${baseURL}/api/products/delete/${productId}`)
+        return res.data.data
+    }catch(err){
+        return null
+    }
+}

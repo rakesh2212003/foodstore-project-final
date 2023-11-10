@@ -7,10 +7,11 @@ import { Spinner } from '../components'
 import { FaCloudUploadAlt, MdDelete } from '../assets/icons'
 import { alertDanger, alertNULL, alertSuccess } from '../context/actions/alertActions'
 import { buttonClick } from '../animations'
+import { addNewProduct, getAllProducts } from '../api'
+import { setAllProducts } from '../context/actions/productActions'
 
 import { db } from '../config/firebase.config'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import { addNewProduct } from '../api'
 
 const DBNewItem = () => {
 
@@ -81,11 +82,14 @@ const DBNewItem = () => {
             setTimeout(() => {
                 dispatch(alertNULL())
             }, 5000)
+            setItemName("")
+            setCategory("")
+            setprice("")
+            setImageDownloadURL(null)
         })
-        setItemName("")
-        setCategory("")
-        setprice("")
-        setImageDownloadURL(null)
+        getAllProducts().then(data => {
+            dispatch(setAllProducts(data))
+        })
     }
 
     return (
