@@ -10,6 +10,7 @@ import { buttonClick } from '../animations'
 
 import { db } from '../config/firebase.config'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { addNewProduct } from '../api'
 
 const DBNewItem = () => {
 
@@ -75,7 +76,16 @@ const DBNewItem = () => {
             product_price: price,
             imageURL: imageDownloadURL
         }
-        console.log(data)
+        addNewProduct(data).then(res => {
+            dispatch(alertSuccess('New Item Added'))
+            setTimeout(() => {
+                dispatch(alertNULL())
+            }, 5000)
+        })
+        setItemName("")
+        setCategory("")
+        setprice("")
+        setImageDownloadURL(null)
     }
 
     return (
