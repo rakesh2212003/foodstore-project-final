@@ -1,9 +1,9 @@
 import React from 'react'
 
 const DBUsers = () => {
-  return (
-    <div>DBUsers</div>
-  )
+    return (
+        <div>DBUsers</div>
+    )
 }
 
 export default DBUsers

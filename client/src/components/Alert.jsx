@@ -5,6 +5,7 @@ import { fadeInOut } from "../animations";
 import { BsExclamationTriangleFill, FaCheck } from "../assets/icons";
 
 const Alert = ({ type, message }) => {
+    // success - green
     if (type === "success") {
         return (
             <motion.div
@@ -17,6 +18,7 @@ const Alert = ({ type, message }) => {
         );
     }
 
+    // warning - orange
     if (type === "warning") {
         return (
             <motion.div
@@ -29,6 +31,7 @@ const Alert = ({ type, message }) => {
         );
     }
 
+    // error - red
     if (type === "danger") {
         return (
             <motion.div
@@ -41,6 +44,7 @@ const Alert = ({ type, message }) => {
         );
     }
 
+    // info - blue
     if (type === "info") {
         return (
             <motion.div

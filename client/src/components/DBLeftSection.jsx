@@ -1,8 +1,10 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 import { Logo } from '../assets/img'
 import { isActiveStyles, isNotActiveStyles } from '../utils/styles'
+import { buttonClick } from '../animations'
 
 const DBLeftSection = () => {
     return (
@@ -14,76 +16,97 @@ const DBLeftSection = () => {
             >
                 <img
                     src={Logo}
-                    alt="logo"
+                    alt='logo'
                     className='w-12'
                 />
-                <p className='font-semibold text-xl'>RFC</p>
+                <p className='font-semibold text-xl'>
+                    RFC
+                </p>
             </NavLink>
+
             <hr />
 
             {/* Left Menu */}
             <ul className='flex flex-col gap-3'>
                 <NavLink
+                    to={'/dashboard/home'}
                     className={({ isActive }) => 
                         isActive
-                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-red-500`
+                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-orange-400`
                             : isNotActiveStyles
                     }
-                    to={'/dashboard/home'}
                 >
                     Home
                 </NavLink>
+
                 <NavLink
+                    to={'/dashboard/orders'}
                     className={({ isActive }) => 
                         isActive
-                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-red-500`
+                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-orange-400`
                             : isNotActiveStyles
                     }
-                    to={'/dashboard/orders'}
                 >
                     Orders
                 </NavLink>
+
                 <NavLink
+                    to={'/dashboard/items'}
                     className={({ isActive }) => 
                         isActive
-                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-red-500`
+                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-orange-400`
                             : isNotActiveStyles
                     }
-                    to={'/dashboard/items'}
                 >
                     Items
                 </NavLink>
+
                 <NavLink
+                    to={'/dashboard/newItem'}
                     className={({ isActive }) => 
                         isActive
-                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-red-500`
+                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-orange-400`
                             : isNotActiveStyles
                     }
-                    to={'/dashboard/newItem'}
                 >
                     Add New Item
                 </NavLink>
+
                 <NavLink
+                    to={'/dashboard/users'}
                     className={({ isActive }) => 
                         isActive
-                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-red-500`
+                            ? `${isActiveStyles} px-4 py-2 border-l-8 border-orange-400`
                             : isNotActiveStyles
                     }
-                    to={'/dashboard/users'}
                 >
                     Users
                 </NavLink>
             </ul>
             
-            {/* Get Center */}
+            {/* Help Center */}
             <div className='w-full items-center justify-center flex h-[225px] mt-auto px-2'>
-                <div className='w-full h-full rounded-md bg-red-400 flex items-center justify-center flex-col gap-3 px-3'>
+                <div className='w-full h-full rounded-md bg-orange-400 flex items-center justify-center flex-col gap-2 px-3'>
                     <div className='w-12 h-12 border bg-white rounded-full flex items-center justify-center'>
-                        <p className='text-2xl font-bold text-red-500'>?</p>
+                        <p className='text-2xl font-bold text-orange-400'>
+                            ?
+                        </p>
                     </div>
-                    <p className='text-xl text-primary font-semibold'>Help Center</p>
-                    <p className='text-base text-gray-300 text-center'>Having trouble in city, Please contact us for more questions</p>
-                    <p className='px-4 py-2 rounded-full bg-primary text-red-400 cursor-pointer'>Get in touch</p>
+
+                    <p className='text-xl text-primary font-semibold'>
+                        Help Center
+                    </p>
+
+                    <p className='text-base text-gray-300 text-center'>
+                        Having trouble in city, Please contact us for more questions
+                    </p>
+
+                    <motion.p
+                        {...buttonClick}
+                        className='px-4 py-2 rounded-full bg-primary text-orange-400 cursor-pointer'
+                    >
+                        Get in touch
+                    </motion.p>
                 </div>
             </div>
         </div>
