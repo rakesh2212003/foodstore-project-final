@@ -3,11 +3,13 @@ import { combineReducers } from 'redux'
 import userReducer from './UserReducer'
 import alertReducer from './alertReducer'
 import productReducer from './productReducer'
+import allUserReducer from './allUserReducer'
 
 const myReducers = combineReducers({
     user: userReducer,
     alert: alertReducer,
-    products: productReducer
+    products: productReducer,
+    allUsers: allUserReducer,
 })
 
 export default myReducers

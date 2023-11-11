@@ -22,7 +22,7 @@ const DBHeader = () => {
 
     const signOut = () => {
         auth.signOut().then(() => {
-            dispatch(setUserNull());
+            dispatch(setUserNull())
             navigate("/login", { replace: true });
         }).catch((err) => console.log(err));
     };

@@ -86,9 +86,10 @@ const DBNewItem = () => {
             setCategory("")
             setprice("")
             setImageDownloadURL(null)
-        })
-        getAllProducts().then(data => {
-            dispatch(setAllProducts(data))
+            getAllProducts().then(data => { //should be down
+                dispatch(setAllProducts(data))
+            })
+            //here will be 'getallproducts'
         })
     }
 
