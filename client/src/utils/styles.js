@@ -5,13 +5,11 @@ export const isNotActiveStyles =
     "text-xl text-textColor hover:text-orange-700 px-2 py-2 transition-all ease-in-out"
 
 export const statuses = [
-    { id: 1, title: "Starters", category: "starters" },
-    { id: 2, title: "Entrees ", category: "entrees" },
-    { id: 3, title: "Salads", category: "salads" },
-    { id: 4, title: "Soups", category: "soups" },
-    { id: 5, title: "Drinks", category: "drinks" },
-    { id: 6, title: "Bread", category: "bread" },
-    { id: 7, title: "Desserts", category: "desserts" },
-    { id: 8, title: "Beverages", category: "beverages" },
-    { id: 9, title: "Fruits", category: "fruits" },
+    { id: 1, title: "Bread", category: "bread" },
+    { id: 2, title: "Desserts", category: "desserts" },
+    { id: 3, title: "Drinks", category: "drinks" },
+    { id: 4, title: "Fruits", category: "fruits" },
+    { id: 5, title: "Entrees", category: "entrees" },
+    { id: 6, title: "Rice", category: "rice" },
+    { id: 7, title: "Starters", category: "starters" },
 ]
