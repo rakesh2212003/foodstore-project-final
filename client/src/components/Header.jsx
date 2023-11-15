@@ -42,7 +42,7 @@ const Header = () => {
                     alt="logo"
                     className='w-12'
                 />
-                <p className='font-semibold text-xl'>RFC</p>
+                <p className='font-semibold text-2xl'>RFC</p>
             </NavLink>
 
             {/* Navbar section */}

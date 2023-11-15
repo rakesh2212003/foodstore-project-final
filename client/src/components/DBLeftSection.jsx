@@ -19,7 +19,7 @@ const DBLeftSection = () => {
                     alt='logo'
                     className='w-12'
                 />
-                <p className='font-semibold text-xl'>
+                <p className='font-semibold text-2xl'>
                     RFC
                 </p>
             </NavLink>
