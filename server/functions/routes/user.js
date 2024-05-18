@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const admin = require('firebase-admin')
 let data = []
+const userIds = new Set();
 
 router.get('/', (req, res) => {
     return res.send("Inside the router")
@@ -22,15 +23,38 @@ router.get('/jwtVerification', async (req, res) => {
     }
 })
 
+// const listAllUsers = (nextPageToken) => {
+//     admin.auth()
+//         .listUsers(100, nextPageToken)
+//         .then((listUsersResult) => {
+//             listUsersResult.users.forEach((userRecord) => {
+//                 data.push(userRecord.toJSON()) //here
+//             });
+//             if (listUsersResult.pageToken) {
+//                 listAllUsers(listUsersResult.pageToken);
+//             }
+//         })
+//         .catch((error) => {
+//             console.log('Error listing users:', error);
+//         });
+// };
+
 const listAllUsers = (nextPageToken) => {
     admin.auth()
-        .listUsers(1000, nextPageToken)
+        .listUsers(100, nextPageToken)
         .then((listUsersResult) => {
             listUsersResult.users.forEach((userRecord) => {
-                data.push(userRecord.toJSON()) //here
+                const user = userRecord.toJSON();
+                if (!userIds.has(user.uid)) {
+                    userIds.add(user.uid);
+                    data.push(user);
+                }
             });
             if (listUsersResult.pageToken) {
                 listAllUsers(listUsersResult.pageToken);
+            } else {
+                console.log('All users have been listed and corrected.');
+                // You can process `data` here if needed
             }
         })
         .catch((error) => {
@@ -38,7 +62,7 @@ const listAllUsers = (nextPageToken) => {
         });
 };
 
-listAllUsers()
+// listAllUsers()
 
 router.get('/all', async (req, res) => {
     listAllUsers()

@@ -72,7 +72,7 @@ const DBLeftSection = () => {
                     Add New Item
                 </NavLink>
 
-                {/* <NavLink
+                <NavLink
                     to={'/dashboard/users'}
                     className={({ isActive }) => 
                         isActive
@@ -81,7 +81,7 @@ const DBLeftSection = () => {
                     }
                 >
                     Users
-                </NavLink> */}
+                </NavLink>
             </ul>
             
             {/* Help Center */}

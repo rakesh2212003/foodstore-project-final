@@ -30,11 +30,11 @@ const DBHome = () => {
     }, [products])
 
     useEffect(() => {
-        if (!allUsers) {
+        // if (!allUsers) {
             getAllUsers().then((data) => {
                 dispatch(setAllUserDetails(data))
             })
-        }
+        // }
     }, [allUsers])
 
     return (
