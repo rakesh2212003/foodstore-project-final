@@ -1,10 +1,29 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { motion } from 'framer-motion'
 
 import { HiCurrencyRupee, IoBasket } from '../assets/icons'
 import { buttonClick } from '../animations'
+import { addNewItemToCart, getAllCartItems } from '../api'
+import { alertNULL, alertSuccess } from '../context/actions/alertActions'
 
 const SliderCard = ({ data, index }) => {
+
+    const user = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
+    const sendToCart = () => {
+        addNewItemToCart(user?.user_id, data).then(res => {
+            dispatch(alertSuccess('Added to the cart'))
+            getAllCartItems(user?.user_id).then((items) => {
+                console.log(items);
+            })
+            setTimeout(() => {
+                dispatch(alertNULL());
+            }, 3000);
+        })
+    }
+
     return (
         <div className='bg-lightOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-between relative px-4 py-2 w-full md:w-[340px] md:min-w-[350px] gap-3'>
             <img 
@@ -23,6 +42,7 @@ const SliderCard = ({ data, index }) => {
 
                 <motion.div
                     {...buttonClick}
+                    onClick={sendToCart}
                     className='w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center absolute -top-4 right-2 cursor-pointer'
                 >
                     <IoBasket className='text-2xl text-primary'/>

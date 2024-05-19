@@ -7,7 +7,6 @@ import { Main, Login, Dashboard } from './containers'
 import { validateUserJWTToken } from './api';
 import { setUserDetails } from './context/actions/userActions'
 import { MainLoader, Alert } from './components';
-import { alertNULL } from './context/actions/alertActions'
 
 import { getAuth } from 'firebase/auth'
 import { app } from './config/firebase.config'
