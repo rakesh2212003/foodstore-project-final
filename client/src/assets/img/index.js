@@ -5,3 +5,4 @@ export { default as Mango } from "./mango.png";
 export { default as HeroBg } from "./heroBg.png";
 export { default as Bill } from "./bill.jpg";
 export { default as Delivery } from './delivery.png'
+export { default as emptyCart } from './emptyCart.svg'

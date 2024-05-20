@@ -6,6 +6,7 @@ import { HiCurrencyRupee, IoBasket } from '../assets/icons'
 import { buttonClick } from '../animations'
 import { addNewItemToCart, getAllCartItems } from '../api'
 import { alertNULL, alertSuccess } from '../context/actions/alertActions'
+import { setCartItems } from '../context/actions/cartActions'
 
 const SliderCard = ({ data, index }) => {
 
@@ -16,7 +17,7 @@ const SliderCard = ({ data, index }) => {
         addNewItemToCart(user?.user_id, data).then(res => {
             dispatch(alertSuccess('Added to the cart'))
             getAllCartItems(user?.user_id).then((items) => {
-                console.log(items);
+                dispatch(setCartItems(items));
             })
             setTimeout(() => {
                 dispatch(alertNULL());

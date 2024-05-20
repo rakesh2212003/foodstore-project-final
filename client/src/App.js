@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 
 import { Main, Login, Dashboard } from './containers'
-import { validateUserJWTToken } from './api';
+import { getAllCartItems, validateUserJWTToken } from './api';
 import { setUserDetails } from './context/actions/userActions'
 import { MainLoader, Alert } from './components';
 
 import { getAuth } from 'firebase/auth'
 import { app } from './config/firebase.config'
 import { fadeInOut } from './animations';
+import { setCartItems } from './context/actions/cartActions';
 
 function App() {
 
@@ -25,6 +26,12 @@ function App() {
             if(cred){
                 cred.getIdToken().then(token => {
                     validateUserJWTToken(token).then(data => {
+                        if(data){
+                            getAllCartItems(data.user_id).then((items) => {
+                                console.log(items);
+                                dispatch(setCartItems(items));
+                            })
+                        }
                         dispatch(setUserDetails(data))
                     })
                 })
