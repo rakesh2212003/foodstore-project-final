@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { slideIn, buttonClick, staggerFadeInOut } from '../animations'
 import { setCartOff } from '../context/actions/displayCartActions'
+import { setCartItems } from '../context/actions/cartActions'
+import { alertNULL, alertSuccess } from '../context/actions/alertActions'
 import { BiChevronsRight, FcClearFilters, HiCurrencyRupee } from '../assets/icons'
 import { emptyCart } from '../assets/img'
+import { getAllCartItems, updateItemQuantity } from '../api'
 
 const Cart = () => {
 
@@ -84,18 +87,33 @@ export const CartItemCard = ({ index, data }) => {
 
     const [itemTotal, setItemTotal] = useState(0);
     const cart = useSelector(state => state.cart);
+    const user = useSelector(state => state.user);
+
+    const dispatch = useDispatch();
 
     const decrementCart = (productId) => {
-
+        dispatch(alertSuccess('Cart item updated'))
+        updateItemQuantity(user?.user_id, productId, "decrement").then((data) => {
+            getAllCartItems(user?.user_id).then((items) => {
+                dispatch(setCartItems(items))
+                dispatch(alertNULL())
+            })
+        })
     }
+    
     const incrementCart = (productId) => {
-
+        dispatch(alertSuccess('Cart item updated'))
+        updateItemQuantity(user?.user_id, productId, "increment").then((data) => {
+            getAllCartItems(user?.user_id).then((items) => {
+                dispatch(setCartItems(items))
+                dispatch(alertNULL())
+            })
+        })
     }
 
     useEffect(() => {
-        setItemTotal(data.product_price * data.quantity);
-    }, [itemTotal, cart])
-
+        setItemTotal(data?.product_price * data?.quantity);
+    }, [itemTotal, cart, data.product_price, data.quantity])
 
     return (
         <motion.div
