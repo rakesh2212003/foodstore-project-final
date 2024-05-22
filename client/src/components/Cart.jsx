@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 
 import { slideIn, buttonClick, staggerFadeInOut } from '../animations'
 import { setCartOff } from '../context/actions/displayCartActions'
@@ -8,24 +9,31 @@ import { setCartItems } from '../context/actions/cartActions'
 import { alertNULL, alertSuccess } from '../context/actions/alertActions'
 import { BiChevronsRight, FcClearFilters, HiCurrencyRupee } from '../assets/icons'
 import { emptyCart } from '../assets/img'
-import { getAllCartItems, updateItemQuantity } from '../api'
+import { baseURL, getAllCartItems, updateItemQuantity } from '../api'
 
 const Cart = () => {
 
     const cart = useSelector(state => state.cart);
+    const user = useSelector(state => state.user);
     const [total, setTotal] = useState(0);
 
     const dispatch = useDispatch()
 
-    // useEffect(() => {
-    //     let tot = 0;
-    //     if(cart){
-    //         cart.map((data) => {
-    //             tot += data.product_price*data.quantity;
-    //             setTotal(tot);
-    //         })
-    //     }
-    // }, [cart])
+    const handleCheckOut = () => {
+        const data = {
+            user: user,
+            cart: cart,
+            total: total,
+        }
+
+        axios.post(`${baseURL}/api/products/create-checkout-session`, { data }).then((res) => {
+            if(res.data.url){
+                window.location.href= res.data.url;
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
 
     useEffect(() => {
         let tot = 0;
@@ -62,7 +70,7 @@ const Cart = () => {
             <div className='flex-1 flex flex-col items-start justify-start rounded-3xl bg-zinc-700 h-[85%] py-2 gap-2 relative'>
                 {cart.length > 0 ?
                     <>
-                        <div className='flex flex-col w-full items-start justify-start gap-2 h-[90%] overflow-y-scroll px-4 scrollbar-none'>
+                        <div className='flex flex-col w-full items-start justify-start gap-2 h-[80%] overflow-y-scroll px-4 scrollbar-none'>
                             {cart?.map((item, i) => (
                                 <CartItemCard
                                     key={i}
@@ -80,13 +88,24 @@ const Cart = () => {
                     </>
                 }
 
-                <div className='absolute bottom-0 flex justify-evenly items-center w-full h-[10%] bg-zinc-900 rounded-3xl'>
-                    <p className='text-2xl text-zinc-400 font-semibold'>Total</p>
-                    <div className='flex justify-center items-center gap-2 text-3xl text-orange-500 font-semibold'>
-                        <span className='text-primary'><HiCurrencyRupee className='text-primary'/></span>
-                        <span> {total} </span>
+                <div className='absolute bottom-0 flex flex-col justify-evenly items-center w-full h-[20%] bg-zinc-900 rounded-3xl'>
+                    <div className='w-full flex justify-evenly items-center gap-2 text-3xl font-semibold'>
+                        <span className='text-2xl text-zinc-400 font-semibold'>Total</span>
+                        <div className='flex justify-center items-center gap-2'>
+                            <span><HiCurrencyRupee className='text-primary'/></span>
+                            <span className='text-orange-500'> {total} </span>
+                        </div>
                     </div>
+
+                    <motion.button
+                        {...buttonClick}
+                        className='bg-orange-400 w-[70%] px-3 py-2 text-xl text-headingColor font-semibold hover:bg-orange-500 drop-shadow-md rounded-2xl'
+                        onClick={ handleCheckOut }
+                    >
+                        Check Out
+                    </motion.button>
                 </div>
+
             </div>
         </motion.div>
     )

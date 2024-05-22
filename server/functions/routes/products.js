@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const admin = require('firebase-admin');
 const db = admin.firestore();
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 router.post('/create', async (req, res) => {
     try {
@@ -49,11 +50,11 @@ router.delete('/delete/:productId', async (req, res) => {
     }
 })
 
-router.post('/addToCart/:userId', async(req,res) => {
+router.post('/addToCart/:userId', async (req, res) => {
     const userId = req.params.userId;
     const productId = req.body.productId;
 
-    try{
+    try {
         const doc = await db
             .collection("cartItems")
             .doc(`/${userId}/`)
@@ -61,8 +62,8 @@ router.post('/addToCart/:userId', async(req,res) => {
             .doc(`/${productId}/`)
             .get();
 
-        if(doc.data()){
-            const quantity = doc.data().quantity+1;
+        if (doc.data()) {
+            const quantity = doc.data().quantity + 1;
             const updatedItems = await db
                 .collection("cartItems")
                 .doc(`/${userId}/`)
@@ -70,7 +71,7 @@ router.post('/addToCart/:userId', async(req,res) => {
                 .doc(`/${productId}/`)
                 .update({ quantity });
             return res.status(200).send({ success: true, data: updatedItems })
-        }else{
+        } else {
             const data = {
                 productId: productId,
                 product_name: req.body.product_name,
@@ -88,21 +89,21 @@ router.post('/addToCart/:userId', async(req,res) => {
 
             return res.status(200).send({ success: true, data: addItems })
         }
-    }catch (err) {
+    } catch (err) {
         return res.send({ success: false, msg: `Error: ${err}` })
     }
 })
 
-router.get('/getCartItems/:user_id', async(req, res) => {
+router.get('/getCartItems/:user_id', async (req, res) => {
     const userId = req.params.user_id;
 
     (async () => {
-        try{
+        try {
             let query = db
                 .collection("cartItems")
                 .doc(`/${userId}/`)
                 .collection("items");
-            
+
             let response = [];
 
             await query.get().then(querysnap => {
@@ -111,20 +112,20 @@ router.get('/getCartItems/:user_id', async(req, res) => {
                     response.push({ ...doc.data() })
                 })
             })
-            
+
             return res.status(200).send({ success: true, data: response })
-        }catch(err){
+        } catch (err) {
             return res.send({ success: false, msg: `Error: ${err}` })
         }
     })();
 })
 
-router.post('/updateCart/:user_id', async(req,res) => {
+router.post('/updateCart/:user_id', async (req, res) => {
     const userId = req.params.user_id;
     const productId = req.query.productId;
     const type = req.query.type;
 
-    try{
+    try {
         const doc = await db
             .collection("cartItems")
             .doc(`/${userId}/`)
@@ -132,9 +133,9 @@ router.post('/updateCart/:user_id', async(req,res) => {
             .doc(`/${productId}/`)
             .get();
 
-        if(doc.data()){
-            if(type === "increment"){
-                const quantity = doc.data().quantity+1;
+        if (doc.data()) {
+            if (type === "increment") {
+                const quantity = doc.data().quantity + 1;
                 const updatedItems = await db
                     .collection("cartItems")
                     .doc(`/${userId}/`)
@@ -143,8 +144,8 @@ router.post('/updateCart/:user_id', async(req,res) => {
                     .update({ quantity });
 
                 return res.status(200).send({ success: true, data: updatedItems })
-            }else{
-                if(doc.data().quantity === 1){
+            } else {
+                if (doc.data().quantity === 1) {
                     await db
                         .collection("cartItems")
                         .doc(`/${userId}/`)
@@ -154,22 +155,70 @@ router.post('/updateCart/:user_id', async(req,res) => {
                         .then((result) => {
                             return res.status(200).send({ success: true, data: result })
                         })
-                }else{
-                    const quantity = doc.data().quantity-1;
+                } else {
+                    const quantity = doc.data().quantity - 1;
                     const updatedItems = await db
                         .collection("cartItems")
                         .doc(`/${userId}/`)
                         .collection("items")
                         .doc(`/${productId}/`)
                         .update({ quantity });
-                        return res.status(200).send({ success: true, data: updatedItems })
+                    return res.status(200).send({ success: true, data: updatedItems })
                 }
             }
         }
-        
-    }catch(error){
+
+    } catch (error) {
         return res.send({ success: false, msg: `Error: ${err}` })
     }
 })
+
+router.post('/create-checkout-session', async (req, res) => {
+    const line_items = req.body.data.cart.map(item => {
+        return {
+            price_data: {
+                currency: "inr",
+                product_data: {
+                    name: item.product_name,
+                    images: [item.imageURL],
+                    metadata: {
+                        id: item.productId
+                    }
+                },
+                unit_amount: item.product_price * 100,
+            },
+            quantity: item.quantity,
+        }
+    })
+
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        shipping_address_collection: { allowed_countries: ["IN"] },
+        shipping_options: [
+            {
+                shipping_rate_data: {
+                    type: "fixed_amount",
+                    fixed_amount: { amount: 0, currency: "inr" },
+                    display_name: "Free Shipping",
+                    delivery_estimate: {
+                        minimum: { unit: "hour", value: 2 },
+                        maximum: { unit: "hour", value: 4 },
+                    },
+                },
+            },
+        ],
+        phone_number_collection: {
+            enabled: true,
+        },
+
+
+        line_items,
+        mode: 'payment',
+        success_url: `${process.env.CLIENT_URL}/checkout-success`,
+        cancel_url: `${process.env.CLIENT_URL}`,
+    });
+
+    res.send({ url: session.url });
+});
 
 module.exports = router
