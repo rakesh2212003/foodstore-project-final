@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { motion, stagger } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { slideIn, buttonClick, staggerFadeInOut } from '../animations'
@@ -17,15 +17,23 @@ const Cart = () => {
 
     const dispatch = useDispatch()
 
+    // useEffect(() => {
+    //     let tot = 0;
+    //     if(cart){
+    //         cart.map((data) => {
+    //             tot += data.product_price*data.quantity;
+    //             setTotal(tot);
+    //         })
+    //     }
+    // }, [cart])
+
     useEffect(() => {
         let tot = 0;
-        if(cart){
-            cart.map((data) => {
-                tot += data.product_price*data.quantity;
-                setTotal(tot);
-            })
+        if (cart) {
+            tot = cart.reduce((acc, data) => acc + (data.product_price * data.quantity), 0);
+            setTotal(tot);
         }
-    }, [cart])
+    }, [cart]);
 
     return (
         <motion.div
@@ -65,8 +73,9 @@ const Cart = () => {
                         </div>
                     </> :
                     <>
-                        <div className='w-full h-full flex justify-center items-center'>
+                        <div className='w-full h-full flex flex-col gap-4 justify-center items-center'>
                             <img src={emptyCart} alt="" className='w-52' />
+                            <p className='text-primary text-2xl font-semibold'>Empty Cart</p>
                         </div>
                     </>
                 }
@@ -112,7 +121,7 @@ export const CartItemCard = ({ index, data }) => {
     }
 
     useEffect(() => {
-        setItemTotal(data?.product_price * data?.quantity);
+        setItemTotal(data?.product_price * data?.quantity)
     }, [itemTotal, cart, data.product_price, data.quantity])
 
     return (
