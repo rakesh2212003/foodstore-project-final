@@ -17,7 +17,8 @@ app.use((req, res, next) => {
 })
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountKey)
+    credential: admin.credential.cert(serviceAccountKey),
+    ignoreUndefinedProperties: true
 });
 
 app.get('/', (req, res) => {

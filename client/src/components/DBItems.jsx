@@ -33,6 +33,7 @@ const DBItems = () => {
                         render: (rowData) => (
                             <img 
                                 src={rowData.imageURL}
+                                alt="img"
                                 className='w-32 h-16 object-contain rounded-md'
                             />
                         ),
