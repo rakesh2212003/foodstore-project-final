@@ -375,7 +375,7 @@ const createOrder = async (customer, intent) => {
         await deleteCart(customer.metadata.user_id, JSON.parse(customer.metadata.cart));
     } catch (err) {
         console.error('Error creating order:', err);
-        throw err; // Re-throw the error to be handled by the caller
+        throw err;
     }
 };
 
