@@ -235,6 +235,87 @@ router.post('/create-checkout-session', async (req, res) => {
 let endpointSecret;
 // endpointSecret = process.env.WEBHOOK_SECRET;
 
+// router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+//     const sig = req.headers['stripe-signature'];
+
+//     let eventType;
+//     let data;
+
+//     if (endpointSecret) {
+//         let event;
+//         try {
+//             event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+//         } catch (err) {
+//             res.status(400).send(`Webhook Error: ${err.message}`);
+//             return;
+//         }
+//         data = event.data.object;
+//         eventType = event.type;
+//     } else {
+//         data = req.body.data.object;
+//         eventType = req.body.type;
+//     }
+
+//     if (eventType === "checkout.session.completed") {
+//         try {
+//             const customer = await stripe.customers.retrieve(data.customer);
+//             // console.log("Customer", customer);
+//             // console.log("Data", data);
+//             createOrder(customer, data, res);
+//         } catch (err) {
+//             console.error('Error retrieving customer:', err);
+//         }
+//     }
+
+//     res.send().end();
+// });
+
+// const createOrder = async(customer, intent, res) => {
+//     try{
+//         const orderId = Date.now();
+
+//         const data = {
+//             intentId: intent.id,
+//             orderId: orderId,
+//             amount: intent.amount_total,
+//             created: intent.created,
+//             payment_method_types: intent.payment_method_types,
+//             status: intent.payment_status,
+//             customer: intent.customer_details,
+//             shipping_details: intent.shipping_details,
+//             userId: customer.metadata.user_id,
+//             items: JSON.parse(customer.metadata.cart),
+//             total: customer.metadata.total,
+//             sts: "preparing"
+//         };
+//         await db.collection("orders").doc(`/${orderId}`).set(data);
+
+//         deleteCart(customer.metadata.user_id, JSON.parse(customer.metadata.cart));
+
+//         return res.status(200).send({ success: true });
+//     }
+//     catch(err){
+//         console.log(err);
+//     }
+// }
+
+// const deleteCart = async (userId, items) => {
+//     items.map(async (data) => {
+//         try {
+//             await db
+//                 .collection("cartItems")
+//                 .doc(`/${userId}/`)
+//                 .collection("items")
+//                 .doc(`/${data.productId}/`)
+//                 .delete();
+//             console.log("--success--");
+//         } catch (err) {
+//             console.error(`Error deleting cart item ${data.productId}:`, err);
+//         }
+//     });
+// };
+
+
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'];
 
@@ -259,26 +340,26 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     if (eventType === "checkout.session.completed") {
         try {
             const customer = await stripe.customers.retrieve(data.customer);
-            // console.log("Customer", customer);
-            // console.log("Data", data);
-            createOrder(customer, data, res);
+            await createOrder(customer, data);
+            res.status(200).send({ success: true });
         } catch (err) {
-            console.error('Error retrieving customer:', err);
+            console.error('Error retrieving customer or creating order:', err);
+            res.status(500).send({ error: 'Internal Server Error' });
         }
+    } else {
+        res.send().end();
     }
-
-    res.send().end();
 });
 
-const createOrder = async(customer, intent, res) => {
-    try{
+const createOrder = async (customer, intent) => {
+    try {
         const orderId = Date.now();
 
         const data = {
             intentId: intent.id,
             orderId: orderId,
             amount: intent.amount_total,
-            created: intent.created,
+            created: intent.created || new Date().toISOString(), // Ensure created is set
             payment_method_types: intent.payment_method_types,
             status: intent.payment_status,
             customer: intent.customer_details,
@@ -288,19 +369,18 @@ const createOrder = async(customer, intent, res) => {
             total: customer.metadata.total,
             sts: "preparing"
         };
-        await db.collection("orders").doc(`/${orderId}`).set(data);
-        
-        deleteCart(customer.metadata.user_id, JSON.parse(customer.metadata.cart));
 
-        return res.status(200).send({ success: true });
+        await db.collection("orders").doc(`${orderId}`).set(data);
+
+        await deleteCart(customer.metadata.user_id, JSON.parse(customer.metadata.cart));
+    } catch (err) {
+        console.error('Error creating order:', err);
+        throw err; // Re-throw the error to be handled by the caller
     }
-    catch(err){
-        console.log(err);
-    }
-}
+};
 
 const deleteCart = async (userId, items) => {
-    items.map(async (data) => {
+    const deletePromises = items.map(async (data) => {
         try {
             await db
                 .collection("cartItems")
@@ -313,7 +393,8 @@ const deleteCart = async (userId, items) => {
             console.error(`Error deleting cart item ${data.productId}:`, err);
         }
     });
-};
 
+    await Promise.all(deletePromises);
+};
 
 module.exports = router
