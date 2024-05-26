@@ -1,18 +1,18 @@
-const functions = require('firebase-functions')
-const admin = require('firebase-admin')
-require('dotenv').config()
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+require('dotenv').config();
 
-const serviceAccountKey = require('./serviceAccountKey.json')
+const serviceAccountKey = require('./serviceAccountKey.json');
 
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
-const cors = require('cors')
+const cors = require('cors');
 app.use(cors({ origin: true }))
 app.use((req, res, next) => {
-    res.set("Access-Control-Allow-Origin", '*')
+    res.set("Access-Control-Allow-Origin", '*');
     next()
 })
 
