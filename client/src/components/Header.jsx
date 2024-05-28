@@ -21,7 +21,7 @@ const Header = () => {
     const cart = useSelector(state => state.cart)
 
     const auth = getAuth(app);
-    
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -87,7 +87,7 @@ const Header = () => {
                         About Us
                     </NavLink>
                 </ul>
-                
+
                 {/* Add to Cart */}
                 <motion.div
                     {...buttonClick}
@@ -105,7 +105,7 @@ const Header = () => {
                 {/* Avatar/Menu Section */}
                 {user ? (
                     <>
-                        <div 
+                        <div
                             onMouseEnter={() => setIsMenu(true)}
                             className='relative cursor-pointer'
                         >
@@ -126,12 +126,16 @@ const Header = () => {
                                     onMouseLeave={() => setIsMenu(false)}
                                     className='px-6 py-4 w-48 bg-white backdrop-blur-md rounded-md shadow-md absolute top-12 right-0 flex flex-col gap-4'
                                 >
-                                    <Link
-                                        to={"/dashboard/home"}
-                                        className="hover:text-orange-500 text-xl text-textColor"
-                                    >
-                                        Dashboard
-                                    </Link>
+                                    {
+                                        user.user_id === process.env.REACT_APP_ADMIN_ID && (
+                                            <Link
+                                                to={"/dashboard/home"}
+                                                className="hover:text-orange-500 text-xl text-textColor"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        )
+                                    }
 
                                     <Link
                                         to={"/profile"}

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Main, Login, Dashboard } from './containers'
 import { getAllCartItems, validateUserJWTToken } from './api';
 import { setUserDetails } from './context/actions/userActions'
-import { MainLoader, Alert, CheckOutSuccess } from './components';
+import { MainLoader, Alert, CheckOutSuccess, UsersOrders } from './components';
 
 import { getAuth } from 'firebase/auth'
 import { app } from './config/firebase.config'
@@ -57,6 +57,7 @@ function App() {
                 <Route path='/login' element={<Login />}/>
                 <Route path='/dashboard/*' element={<Dashboard />}/>
                 <Route path='/checkout-success' element={<CheckOutSuccess />}/>
+                <Route path='user-orders' element={<UsersOrders />} />
             </Routes>
 
             {alert?.type &&
