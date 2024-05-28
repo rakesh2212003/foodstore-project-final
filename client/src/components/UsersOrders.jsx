@@ -14,8 +14,6 @@ const UsersOrders = () => {
 
     const [UsersOrders, setUsersOrders] = useState({});
 
-    console.log(UsersOrders);
-
     useEffect(() => {
         if (!orders) {
             getAllOrders().then((data) => {
