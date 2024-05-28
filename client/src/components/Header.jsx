@@ -137,12 +137,13 @@ const Header = () => {
                                         )
                                     }
 
-                                    <Link
+                                    {/* <Link
                                         to={"/profile"}
                                         className="hover:text-orange-500 text-xl text-textColor"
                                     >
                                         My Profile
-                                    </Link>
+                                    </Link> */}
+
                                     <Link
                                         to={"/user-orders"}
                                         className="hover:text-orange-500 text-xl text-textColor"
